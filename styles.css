@@ -1,0 +1,196 @@
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Play", serif;
+  background-color: beige;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+}
+main {
+
+  padding: 2rem;
+  margin: 1rem;
+}
+
+#container {
+  display: flex;
+  min-width: 300px;
+  width: 90%;
+  max-width: 500px;
+  margin: auto;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.flip-card {
+  min-width: 100px;
+  max-width: 200px;
+  height: 100px;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.flip-card:hover {
+  opacity: 0.8;
+}
+
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+}
+
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 0.5rem;
+}
+
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-card-back {
+  background-color: #2980b9;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+.rotate180 {
+  transition: 0.8s;
+  transform: rotateY(180deg)
+}
+
+.question-mark {
+  font-size: 3rem;
+  font-weight: 700;
+  padding: 0;
+  line-height: 0;
+  text-align: center;
+  color: #ccc;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.hidden {
+  transition: 0.8s;
+  visibility: hidden;
+}
+
+
+.result-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  background-color: black;
+  /* opacity: 1; */
+  color: white;
+  width: 100%;
+  max-width: 650px;
+  height: 50vh;
+  z-index: 10000;
+}
+
+#totalMoves {
+  font-size: 3rem;
+  padding: 1rem;
+  color: #2980b9;
+  text-align: center;
+}
+
+.scoreBoard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: chocolate;
+  margin-top: 1rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.5rem;
+}
+
+.scoreBoard p,
+button {
+  font-weight: 700;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.scoreBoard button {
+  padding: 0.5rem 0.8rem;
+  background-color: brown;
+
+  outline: none;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* modal popup */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content */
+.display-modal {
+  transition: 0.8s;
+  display: block;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}

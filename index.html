@@ -1,11 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
     <title>Guvi_Task_3 - Card Flip Game</title>
 </head>
+
 <body>
-    
+    <main>
+        <h1>Memory Game - Flip Card</h1>
+        <div id="container">
+            <!-- <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <p class="question-mark">?</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <p class="card-value">John Doe</p>
+                    </div>
+                </div>
+            </div> -->
+
+
+        </div>
+        <!-- Score board section -->
+        <div class="scoreBoard">
+            <p>Moves: <span id="moves">0</span></p>
+           
+                <button id="reset">Reset</button>
+            
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="totalMoves">!</p>
+            </div>
+
+        </div>
+
+    </main>
 </body>
+
 </html>
+<script>
+    const cardData = ['A', 'B', 'C', 'D', 'E', 'F'];
+    // add eventlisenter to card container
+    const cardContainer = document.getElementById('container');
+    
+    createCards();
+
+    const allCards = document.querySelectorAll('.flip-card-inner');
+    const arrayOfAllCards = Array.from(allCards);
+
+    arrayOfAllCards.forEach((element, index) => {
+        element.setAttribute('id', 'card_' + index);
+    });
+
+    let flippedCardStack = [];
+    let moves = 0;
+
+    const movesElement = document.getElementById('moves');
+    const resetButton = document.getElementById('reset');
+    const gameResultText = document.getElementById('totalMoves');
+    const cardsNumberSelect = document.getElementById('number-of-cards');
+
+    // function which creates cards as per the card data array provided
+    function createCards() {
+        const randomPositionedCards = shuffleArray([...cardData, ...cardData]);
+       
+        for (let i = 0; i < randomPositionedCards.length; i++) {
+            const flipCard = document.createElement('div');
+            flipCard.setAttribute('class', 'flip-card');
+
+            const flipCardInner = document.createElement('div');
+            flipCardInner.setAttribute('class', 'flip-card-inner');
+
+            const flipCardFront = document.createElement('div');
+            flipCardFront.setAttribute('class', 'flip-card-front');
+
+            const questionMark = document.createElement('p');
+            questionMark.setAttribute('class', 'question-mark');
+            questionMark.innerText = '?';
+
+            flipCardFront.appendChild(questionMark);
+
+            const flipCardBack = document.createElement('div');
+            flipCardBack.setAttribute('class', 'flip-card-back');
+
+            const cardValue = document.createElement('p');
+            cardValue.setAttribute('class', 'card-value');
+            cardValue.innerText = randomPositionedCards[i];
+
+            flipCardBack.appendChild(cardValue);
+            flipCardInner.appendChild(flipCardFront);
+            flipCardInner.appendChild(flipCardBack);
+            flipCard.appendChild(flipCardInner);
+            cardContainer.appendChild(flipCard);
+        }
+    }
+
+
+    // action done when card is being clicked
+    cardContainer.addEventListener('click', (e) => {
+        // set moves count
+        const selectedCard = e.target.closest('.flip-card-inner');
+       
+        if (selectedCard !== null) {
+            movesElement.innerText = moves += 1;
+            gameResultText.innerText = 'Game completed in ' + moves + ' moves!!!'
+            if (selectedCard.classList.contains('rotate180')) {
+                selectedCard.classList.remove('rotate180');
+                if (flippedCardStack.length == 2) {
+                    arrayOfAllCards.forEach(card => card.classList.remove('rotate180'));
+                    flippedCardStack = [];
+                }
+                if (flippedCardStack.includes(selectedCard.id)) {
+                    const removeCardIndex = flippedCardStack.indexOf(selectedCard.id)
+                    flippedCardStack.splice(removeCardIndex, 1);
+                }
+            } else {
+                selectedCard.classList.add('rotate180');
+                if (!flippedCardStack.includes(selectedCard.id)) {
+                    flippedCardStack.push(selectedCard.id);
+                }
+
+                if (flippedCardStack.length == 2) {
+                    const cardOne = document.getElementById(flippedCardStack[0]);
+                    const cardTwo = document.getElementById(flippedCardStack[1]);
+                    const cardOneValue = cardOne.querySelector('.card-value').innerText;
+                    const cardTwoValue = cardTwo.querySelector('.card-value').innerText;
+                    const cardOneParent = cardOne.closest('.flip-card-inner');
+                    const cardTwoParent = cardTwo.closest('.flip-card-inner');
+
+                    if (cardOneValue == cardTwoValue) {
+                        cardOneParent.classList.add('hidden');
+                        cardTwoParent.classList.add('hidden');
+                        flippedCardStack = []
+                    } else {
+                        cardOneParent.classList.remove('rotate180');
+                        flippedCardStack.splice(0, 1);
+                    }
+
+                }
+
+                if (flippedCardStack.length == 3) {
+                    arrayOfAllCards.forEach(card => card.classList.remove('rotate180'));
+                    flippedCardStack = [];
+                }
+            }
+
+            if (arrayOfAllCards.every(card => card.classList.contains('hidden'))) {
+                const modal = document.getElementById("myModal");
+                modal.classList.add("display-modal");
+            }
+        }
+
+    });
+
+    // Shuffle array util function
+    function shuffleArray(array) {
+        // Create a new array with the length of the given array in the parameters
+        const newArray = array.map(() => null);
+
+        // Create a new array where each index contain the index value
+        const arrayReference = array.map((item, index) => index);
+
+        // Iterate on the array given in the parameters
+        array.forEach(randomize);
+
+        return newArray;
+
+        function randomize(item) {
+            const randomIndex = getRandomIndex();
+
+            // Replace the value in the new array
+            newArray[arrayReference[randomIndex]] = item;
+
+            // Remove in the array reference the index used
+            arrayReference.splice(randomIndex, 1);
+        }
+
+        // Return a number between 0 and current array reference length
+        function getRandomIndex() {
+            const min = 0;
+            const max = arrayReference.length;
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+    }
+
+    // Reset function to make the game to its initial state
+    function handleReset() {
+        flippedCardStack = [];
+        moves = 0;
+        movesElement.innerText = 0;
+        arrayOfAllCards.forEach(card => {
+            card.classList.remove('rotate180');
+            card.classList.remove('hidden');
+        });
+        location.reload()
+    }
+
+    resetButton.addEventListener('click', () => handleReset());
+
+    // Modal pop section after end of the game
+    const modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    const btn = document.getElementById("myBtn");
+
+    const span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function () {
+        modal.classList.remove('display-modal');
+        handleReset();
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.classList.remove('display-modal');
+            handleReset();
+        }
+    }
+</script>
